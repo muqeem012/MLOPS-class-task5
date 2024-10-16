@@ -1,0 +1,43 @@
+# Yaml code for creating a deployment and service of backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      # this is the specification of pods
+      containers:
+        - name: backendcontainer
+          image: muqeem/kubernetestask-backend:latest
+          ports:
+           - containerPort: 6000
+
+---
+# Yaml for making the external service for backend deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+
+spec:
+  type: NodePort
+  selector:
+    app: backend
+
+  ports:
+    - protocol: TCP
+      port: 6000
+      targetPort: 6000
+      nodePort: 30200
